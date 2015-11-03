@@ -1,13 +1,15 @@
 <html>
 
 <head>
-	<script type="text/javascript" src="ocanvas-2.8.1.js"></script>
-	<script type="text/javascript" src="underscore.js"></script>
+	<script type="text/javascript" src="external/ocanvas-2.8.1.js"></script>
+	<script type="text/javascript" src="external/underscore.js"></script>
+
+	<script type="text/javascript" src="world.js"></script>
+	<script type="text/javascript" src="agent.js"></script>
 
 <script type="text/javascript">
 
-//	GIT 
-//	Break into classes
+
 // 	unit tests of world
 // 	generate a configuration page
 //		Grid size
@@ -18,87 +20,16 @@ function processInput() {
 }
 
 
-
-
-var AGENT_SIZE = 1;
-
-
-world = {
-	agents:{},
-	grid:{
-		columns:{},
-		get:function(x,y) {
-			var ret = null;
-			var col = this.columns[x];
-			if (col != null) {
-				ret = col[y];
-			}
-			return ret;
-		},
-
-		put:function(x,y,agent) {
-			var col = this.columns[x];
-			if (col == null) {
-				col = this.columns[x] = {};
-			}
-			col[y] = agent;
-
-		}
-	},
-	getAgent:function(x,y) {
-		return this.grid.get(x,y);
-	},
-
-	addAgentsToWorld:function(arr,canvas) {
-		for (var i = 0; i < arr.length; i++) {
-			var agent = arr[i];
-			var x = canvas.width / 2 + agent.xStart*AGENT_SIZE,
-				y = canvas.height / 2 + agent.yStart*AGENT_SIZE;
-			if (this.getAgent(x,y)==null) {
-				agent.view = canvas.display.rectangle({
-					x:0, y:0,
-					width: AGENT_SIZE,	height: AGENT_SIZE,
-					fill: "#fff"
-				}).add();
-				this.placeAgent(x,y,agent);
-				this.agents[agent.id] = agent;
-			} else {
-				console.log("Collision")
-			}
-		}
-	},
-
-	placeAgent:function(x,y,agent) {
-			if (this.getAgent(x,y)==null) {
-				this.grid.put(agent.view.x,agent.view.y,null);
-				agent.view.x = x; agent.view.y = y;
-				this.grid.put(agent.view.x,agent.view.y,agent);
-			}
-	},
-	moveAgent:function(xD,yD,agent) {
-		this.placeAgent(agent.view.x+xD,agent.view.y+yD,agent)
-	},
-
-	removeAgent: function(agent) {
-		this.agents[agent.id] = null;
-		this.grid.put(agent.view.x,agent.view.y,null);
-	}
-}
-
-
-var AGENT_MAX_ID = 1;
-function Agent(xStart,yStart) {
-	this.id = AGENT_MAX_ID++;
-	this.xStart = xStart ; this.yStart = yStart;
-	console.log ("Agent: " + this.id);
-}
-
-
-
-
-
 oCanvas.domReady( function() {
 	var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });
+
+	var AGENT_SIZE = 1;
+	var world = new World(canvas, 
+		{
+			AGENT_SIZE: 1
+		} //
+	);	
+
 
 	var randStartConf = function(n,squareSize) {
 		var ret = [];
@@ -168,8 +99,8 @@ var conf1 = [
 		//wake awakeneing cells from the tmp grid
 	};
 
-	//canvas.setLoop(moveRandomly).start();
-	canvas.setLoop(gameOfLife).start();
+	canvas.setLoop(moveRandomly).start();
+	//canvas.setLoop(gameOfLife).start();
 
 });
 
