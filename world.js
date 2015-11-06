@@ -1,10 +1,28 @@
 
 
+
+
 function World(canvas,config) {
 	
-	this.canvas = canvas;
+	defaultConfig = {
+			AGENT_SIZE: 10,
+			step : function () {}
+	}
 
+	config = _.extend({},defaultConfig,config);
+
+
+	this.canvas = canvas;
 	this.agents = {};
+	this.step = function (n) {
+		debugger
+		n = (_.isUndefined(n) || _.isNull(n))?1:n;
+		for (var i = 0;i<n;i++) {
+			config.step();
+		}
+	}
+
+
 	
 	this.grid = {
 		columns:{},
@@ -80,6 +98,12 @@ function World(canvas,config) {
 
 	this.moveAgent = function(xD,yD,agent) {
 		this.moveAgentAbs(agent.x+xD,agent.y+yD,agent)
+	};
+
+	this.forEachAgent = function(func) {
+		_.each(this.agents,function(agent) {
+			func(agent);
+		});
 	};
 
 	this.removeAgent = function(agent) {
