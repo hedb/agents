@@ -1,12 +1,13 @@
 
 
 
+debugger
 
 function World(canvas,config) {
 	
 	defaultConfig = {
 			AGENT_SIZE: 10,
-			step : function () {}
+			step : function (world) {}
 	}
 
 	config = _.extend({},defaultConfig,config);
@@ -14,11 +15,13 @@ function World(canvas,config) {
 
 	this.canvas = canvas;
 	this.agents = {};
-	this.step = function (n) {
-		debugger
-		n = (_.isUndefined(n) || _.isNull(n))?1:n;
+	this.step = function (world,n) {
+		if ( _.isUndefined(world) || _.isNull(world)  ||  _.isUndefined(n) || _.isNull(n)  ) {
+			console.log("Step called with no params");
+			return;
+		}
 		for (var i = 0;i<n;i++) {
-			config.step();
+			config.step(world);
 		}
 	}
 
