@@ -31,40 +31,63 @@ function World(canvas,config) {
 		return this.grid.get(x,y);
 	};
 
+	
+	this.translateToViewDim = function(xIn,yIn) {
+		var ret = {
+			x:this.canvas.width / 2 + xIn*config.AGENT_SIZE,
+			y:this.canvas.height / 2 + yIn*config.AGENT_SIZE
+		}
+		return ret;
+	};
+
+
 	this.addAgentsToWorld = function(arr) {
 		for (var i = 0; i < arr.length; i++) {
 			var agent = arr[i];
-			var x = canvas.width / 2 + agent.xStart*config.AGENT_SIZE,
-				y = canvas.height / 2 + agent.yStart*config.AGENT_SIZE;
-			if (this.getAgent(x,y)==null) {
+
+			if (this.getAgent(agent.x,agent.y)==null) {
+				
+				// Generate View
 				agent.view = canvas.display.rectangle({
 					x:0, y:0,
 					width: config.AGENT_SIZE,	height: config.AGENT_SIZE,
 					fill: "#fff"
 				}).add();
-				this.placeAgent(x,y,agent);
+
+				this.moveAgentAbs(agent.x,agent.y,agent);
 				this.agents[agent.id] = agent;
+
 			} else {
 				console.log("Collision")
 			}
+
 		}
+		this.canvas.redraw();
 	};
 
-	this.placeAgent = function(x,y,agent) {
+	this.moveAgentAbs = function(x,y,agent) {
 			if (this.getAgent(x,y)==null) {
-				this.grid.put(agent.view.x,agent.view.y,null);
-				agent.view.x = x; agent.view.y = y;
-				this.grid.put(agent.view.x,agent.view.y,agent);
+				
+				this.grid.put(agent.x,agent.y,null);
+				agent.x = x; agent.y = y;
+				this.grid.put(agent.x,agent.y,agent);
+
+				var dim = this.translateToViewDim(x,y);
+				agent.view.x = dim.x; agent.view.y = dim.y;
+				
 			}
 	}
 
 	this.moveAgent = function(xD,yD,agent) {
-		this.placeAgent(agent.view.x+xD,agent.view.y+yD,agent)
+		this.moveAgentAbs(agent.x+xD,agent.y+yD,agent)
 	};
 
 	this.removeAgent = function(agent) {
 		this.agents[agent.id] = null;
-		this.grid.put(agent.view.x,agent.view.y,null);
+
+		var dim = this.translateToViewDim(x,y);
+		this.grid.put(agent.x,agent.y,null);
+
 	};
 
 }

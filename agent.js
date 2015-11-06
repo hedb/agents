@@ -1,6 +1,6 @@
 var AGENT_MAX_ID = 1;
-function Agent(xStart,yStart) {
+function Agent(x,y) {
 	this.id = AGENT_MAX_ID++;
-	this.xStart = xStart ; this.yStart = yStart;
+	this.x = x ; this.y = y;
 	console.log ("Agent: " + this.id);
 }
