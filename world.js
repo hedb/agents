@@ -2,16 +2,16 @@
 
 
 function Grid() {
-	this.columns = {};
+	this.obj = {};
 }
 
 Grid.prototype = {
 
-		obj:{},
-
+	
 		get:function(x,y) {
 			var id = ""+x+"_"+y;
 			var ret = this.obj[id];
+			ret = (_.isUndefined(ret))?null:ret;
 			return ret;
 		},
 
@@ -35,7 +35,6 @@ Grid.prototype = {
 		forEachEntry:function(func) {
 			_.each(this.obj,function(obj,id) {
 				var t = id;
-				debugger
 			})
 
 		}
@@ -107,6 +106,7 @@ function World(canvas,config) {
 
 			} else {
 				console.log("Collision")
+				debugger
 			}
 
 		}
