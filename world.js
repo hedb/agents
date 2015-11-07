@@ -1,7 +1,48 @@
 
 
 
-debugger
+function Grid() {
+	this.columns = {};
+}
+
+Grid.prototype = {
+
+		obj:{},
+
+		get:function(x,y) {
+			var id = ""+x+"_"+y;
+			var ret = this.obj[id];
+			return ret;
+		},
+
+		put:function(x,y,entry) {
+			var id = ""+x+"_"+y;
+			this.obj[id] = entry;
+		},
+
+		augment:function(x,y,n) {
+			var entry = this.get(x,y);
+			if (_.isNumber(entry)) {
+				this.put(x,y,entry + n);
+			} else if(_.isNull(entry) || _.isUndefined(entry)) {
+				this.put(x,y,1);
+			} else {
+				console.log("Trying to augment an Object : " + entry);
+				debugger
+			}
+		},
+
+		forEachEntry:function(func) {
+			_.each(this.obj,function(obj,id) {
+				var t = id;
+				debugger
+			})
+
+		}
+
+}
+		
+	
 
 function World(canvas,config) {
 	
@@ -27,26 +68,12 @@ function World(canvas,config) {
 
 
 	
-	this.grid = {
-		columns:{},
-		get:function(x,y) {
-			var ret = null;
-			var col = this.columns[x];
-			if (col != null) {
-				ret = col[y];
-			}
-			return ret;
-		},
+	this.grid = new Grid();
 
-		put:function(x,y,agent) {
-			var col = this.columns[x];
-			if (col == null) {
-				col = this.columns[x] = {};
-			}
-			col[y] = agent;
-
-		}
-	};
+	this.cloneGrid = function() {
+		var ret = new Grid();
+		return ret;
+	}
 
 	this.getAgent = function(x,y) {
 		return this.grid.get(x,y);
@@ -112,8 +139,10 @@ function World(canvas,config) {
 	this.removeAgent = function(agent) {
 		this.agents[agent.id] = null;
 
-		var dim = this.translateToViewDim(x,y);
+		var dim = this.translateToViewDim(agent.x,agent.y);
 		this.grid.put(agent.x,agent.y,null);
+
+		this.canvas.removeChild(agent.view,true);
 
 	};
 
