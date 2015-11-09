@@ -34,7 +34,8 @@ Grid.prototype = {
 
 		forEachEntry:function(func) {
 			_.each(this.obj,function(obj,id) {
-				var t = id;
+				var dim = id.split("_")
+				func(Number(dim[0]),Number(dim[1]),obj);
 			})
 
 		}
@@ -106,7 +107,6 @@ function World(canvas,config) {
 
 			} else {
 				console.log("Collision")
-				debugger
 			}
 
 		}
@@ -131,15 +131,14 @@ function World(canvas,config) {
 	};
 
 	this.forEachAgent = function(func) {
-		_.each(this.agents,function(agent) {
+		_.each(_.clone(this.agents),function(agent) {
 			func(agent);
 		});
 	};
 
 	this.removeAgent = function(agent) {
-		this.agents[agent.id] = null;
+		delete this.agents[agent.id];
 
-		var dim = this.translateToViewDim(agent.x,agent.y);
 		this.grid.put(agent.x,agent.y,null);
 
 		this.canvas.removeChild(agent.view,true);

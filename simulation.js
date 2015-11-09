@@ -11,6 +11,7 @@ var Simulation = {
 			});
 		});
 
+
 		world.forEachAgent(function (agent) {
 			var neigbourCount = altGrid.get(agent.x,agent.y);
 			if (neigbourCount != 2 && neigbourCount != 3) {
@@ -19,9 +20,9 @@ var Simulation = {
 		});
 
 		altGrid.forEachEntry(function (x,y,neigbourCount) {
-			if (neigbourCount == 2 || neigbourCount == 3) {
+			if (neigbourCount == 3) {
 				if (world.getAgent(x,y) == null) {
-					world.addAgentsToWorld({x:x,y:y});
+					world.addAgentsToWorld([new Agent(x,y)]);
 				}
 			}		
 		});

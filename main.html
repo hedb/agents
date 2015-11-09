@@ -6,11 +6,10 @@
 
 	<script type="text/javascript" src="world.js"></script>
 	<script type="text/javascript" src="agent.js"></script>
+	<script type="text/javascript" src="simulation.js"></script>
 
 <script type="text/javascript">
 
-// Create step advance for world
-// Unit test
 // Add GUI for steps
 // create remove agent
 // complete game of life
@@ -25,10 +24,9 @@ function processInput() {
 oCanvas.domReady( function() {
 	var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });
 
-	var AGENT_SIZE = 1;
 	var world = new World(canvas, 
 		{
-			AGENT_SIZE: 10
+			AGENT_SIZE: 1
 		} //
 	);	
 
@@ -53,8 +51,8 @@ var conf1 = [
 		new Agent(1,1)
 ];
 
-	//world.addAgentsToWorld(randStartConf(100,10),canvas);
-	world.addAgentsToWorld(conf1,canvas);
+	world.addAgentsToWorld(randStartConf(100,10),canvas);
+	//world.addAgentsToWorld(conf1,canvas);
 
 	// Set up a tick function that will move all satellites each frame
 
@@ -72,37 +70,8 @@ var conf1 = [
 		)
 	};
 
-
-	var gameOfLife = function () {
-
-		var getNeigboursNo = function(agent) {
-			var ret = 0,
-				diffs = [[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]];
-			for (var i = 0; i < diffs.length; i++) {
-				ret += (world.getAgent(agent.view.x+diffs[i][0],agent.view.y+diffs[i][1])!=null);
-			}
-			return ret;
-		}
-
-		var tmpGrid = [];
-
-
-
-		_.each(world.agents,function(agent) {
-			if (agent!= null) {
-				var n = getNeigboursNo(agent);
-				//colourTmpGrid(tmpGrid,agent);
-				if ((n<2) || (n>3)) {
-					world.removeAgent(agent);
-				}
-			}
-		});
-
-		//wake awakeneing cells from the tmp grid
-	};
-
-	canvas.setLoop(moveRandomly).start();
-	//canvas.setLoop(gameOfLife).start();
+	//canvas.setLoop(moveRandomly).start();
+	canvas.setLoop(Simulation.GameOfLife_Step).start();
 
 });
 
