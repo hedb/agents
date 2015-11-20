@@ -59,7 +59,7 @@ function World(config) {
 	}
 
 	this.canvas = oCanvas.create({ canvas: config["m_CanvasID"], background: "#222" });
-	this.canvas.settings.fps = 5;
+	this.canvas.settings.fps = 20;
 
 	this.agents = {};
 

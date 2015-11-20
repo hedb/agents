@@ -10,12 +10,49 @@
 
 <script type="text/javascript">
 
-// push all ocanvas into world
+// Fix recreating of the canvas
+// create Juks walking one towrds each other
 // create choosing behavior between traits like in article
 
 
 
 oCanvas.domReady( function() {
+
+
+
+var A = new Agent(-50,-50);
+var B = new Agent(-50,50);
+var C = new Agent(50,50);
+var D = new Agent(50,-50);
+A.target = B;
+B.target = C;
+C.target = D;
+D.target = A;
+
+var world = new World( 	
+	{	
+		m_CanvasID: "#myCanvas",	
+		AGENT_SIZE: 3,	
+		step : function (world) {
+			_.each(world.agents,function(agent) {
+				if (agent!=null) {
+					var dx = agent.target.x - agent.x,
+							dy = agent.target.y - agent.y,
+							a = Math.atan2(dy, dx); 
+
+					var dx1 = Math.cos(a), dy1 = Math.sin(a);
+
+					world.moveAgent(Math.round(dx1),Math.round(dy1),agent);
+				}
+			}
+			);
+		}
+	}	
+);	
+	
+var conf1 = [A,B,C,D];
+world.addAgentsToWorld(conf1);
+world.startStepping();	
 
 }
 );
@@ -26,15 +63,16 @@ oCanvas.domReady( function() {
 var inputs = {
 
 	0: '\
-	var world = new World( \n\
-		{	\n\
-			m_CanvasID: "#myCanvas",	\n\
-			AGENT_SIZE: 1,	\n\
-			step : Simulation.moveRandomly				\n\
-		} 	\n\
-	);		\n\
-	world.addAgentsToWorld(Simulation.randStartConf(100,10));	\n\
-	world.startStepping();	\n\
+var world = new World( \n\
+	{	\n\
+		m_CanvasID: "#myCanvas",	\n\
+		AGENT_SIZE: 1,	\n\
+		step : Simulation.moveRandomly				\n\
+	} 	\n\
+);		\n\
+	\n\
+world.addAgentsToWorld(Simulation.randStartConf(100,10));	\n\
+world.startStepping();	\n\
 ',
 
 	1: '\
@@ -45,6 +83,7 @@ var world = new World( 	\n\
 		step : Simulation.GameOfLife_Step	\n\
 	}	\n\
 );	\n\
+	\n\
 var conf1 = [\n\
 		new Agent(0,0),\n\
 		new Agent(1,0),\n\
@@ -52,8 +91,9 @@ var conf1 = [\n\
 		new Agent(2,1),\n\
 		new Agent(1,2),\n\
 ];\n\
-	world.addAgentsToWorld(conf1);\n\
-	world.startStepping();	\n\
+	\n\
+world.addAgentsToWorld(conf1);\n\
+world.startStepping();	\n\
 '
 }
 
@@ -64,6 +104,9 @@ function paste(i) {
 
 
 function processInput() {
+	var suggestionsDiv = document.getElementById('Suggestions');
+	suggestionsDiv.parentElement.removeChild(suggestionsDiv);
+
 	var inputTxt = document.getElementById('input').value;
 	eval(inputTxt);
 }
@@ -82,9 +125,14 @@ World Input
 <textarea id = "input" cols="100" rows="20"> </textarea>
 <br/>
 
+
+<div id="Suggestions">
 <a href="javascript:paste(0)" >Random configuration - Moves random</a>
 ......
 <a href="javascript:paste(1)" >Game Of Life - Glider</a>
+
+</div>
+
 <br/>
 <input type="button" value="Process Input" onclick="processInput()"></input>
 <br/>
