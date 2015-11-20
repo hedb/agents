@@ -48,7 +48,7 @@ function World(config) {
 	
 	defaultConfig = {
 			AGENT_SIZE: 10,
-			step : function (world) {}
+			step : function () {}
 	}
 
 	config = _.extend({},defaultConfig,config);
@@ -59,16 +59,23 @@ function World(config) {
 	}
 
 	this.canvas = oCanvas.create({ canvas: config["m_CanvasID"], background: "#222" });
+	this.canvas.settings.fps = 5;
 
 	this.agents = {};
-	this.step = function (world,n) {
-		if ( _.isUndefined(world) || _.isNull(world)  ||  _.isUndefined(n) || _.isNull(n)  ) {
-			console.log("Step called with no params");
-			return;
+
+
+
+	this.step = function (n) {
+		if (_.isUndefined(n) || _.isNull(n)  ) {
+			n=1;
 		}
 		for (var i = 0;i<n;i++) {
-			config.step(world);
+			config.step(this);
 		}
+	}
+
+	this.stepFromCanvasLoop = function() {
+		this.step(1);
 	}
 
 
@@ -149,5 +156,15 @@ function World(config) {
 		this.canvas.removeChild(agent.view,true);
 
 	};
+
+
+
+	this.startStepping = function() {
+		var world = this;
+		this.canvas.setLoop(function() {
+			world.stepFromCanvasLoop();
+		})
+		.start();
+	}
 
 }

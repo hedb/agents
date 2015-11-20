@@ -16,20 +16,6 @@
 
 
 oCanvas.domReady( function() {
-	var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });
-
-
-	var world = new World(canvas, 
-		{
-			AGENT_SIZE: 1
-		} //
-	);	
-
-
-	world.addAgentsToWorld(Simulation.randStartConf(100,10),canvas);
-
-
-	canvas.setLoop(function() {Simulation.moveRandomly(world)}).start();
 
 }
 );
@@ -38,10 +24,23 @@ oCanvas.domReady( function() {
 
 
 var inputs = {
+
+	0: '\
+	var world = new World( \n\
+		{	\n\
+			m_CanvasID: "#myCanvas",	\n\
+			AGENT_SIZE: 1,	\n\
+			step : Simulation.moveRandomly				\n\
+		} 	\n\
+	);		\n\
+	world.addAgentsToWorld(Simulation.randStartConf(100,10));	\n\
+	world.startStepping();	\n\
+',
+
 	1: '\
-var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });	\n\
-var world = new World(canvas, 	\n\
+var world = new World( 	\n\
 	{	\n\
+		m_CanvasID: "#myCanvas",	\n\
 		AGENT_SIZE: 10,	\n\
 		step : Simulation.GameOfLife_Step	\n\
 	}	\n\
@@ -53,11 +52,8 @@ var conf1 = [\n\
 		new Agent(2,1),\n\
 		new Agent(1,2),\n\
 ];\n\
-	world.addAgentsToWorld(conf1,canvas);\n\
-	canvas.settings.fps = 5;\n\
-	canvas.setLoop(function() {\n\
-	world.step(world,1);\n\
-	}).start();\n\
+	world.addAgentsToWorld(conf1);\n\
+	world.startStepping();	\n\
 '
 }
 

@@ -45,11 +45,11 @@ QUnit.test( "hello world 2", function( assert ) {
 
 	assert.notEqual(null,world.getAgent(0,0));
 
-	world.step(world,1);
+	world.step(1);
 	assert.equal(null,world.getAgent(0,0));
 	assert.notEqual(null,world.getAgent(1,1));
 
-	world.step(world,2);
+	world.step(2);
 	assert.equal(null,world.getAgent(0,0));
 	assert.equal(null,world.getAgent(1,1));
 	assert.equal(null,world.getAgent(2,2));
@@ -76,7 +76,7 @@ QUnit.test( "Game of life 1", function( assert ) {
 
 	assert.notEqual(null,world.getAgent(0,0));
 
-	world.step(world,1);
+	world.step(1);
 	assert.equal(null,world.getAgent(0,0));
 
 });
@@ -103,7 +103,7 @@ QUnit.test( "Game of life 2", function( assert ) {
 	assert.notEqual(null,world.getAgent(0,0));
 	assert.notEqual(null,world.getAgent(2,0));
 
-	world.step(world,1);
+	world.step(1);
 
 	assert.notEqual(null,world.getAgent(1,-1));
 	assert.notEqual(null,world.getAgent(1,0));
@@ -111,7 +111,7 @@ QUnit.test( "Game of life 2", function( assert ) {
 	assert.equal(null,world.getAgent(0,0));
 	assert.equal(null,world.getAgent(2,0));
 
-	world.step(world,1);
+	world.step(1);
 	assert.equal(null,world.getAgent(1,-1));
 	assert.equal(null,world.getAgent(1,1));
 	assert.notEqual(null,world.getAgent(0,0));
