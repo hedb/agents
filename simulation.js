@@ -29,7 +29,7 @@ var Simulation = {
 	},
 
 
-	moveRandomly:function () {
+	moveRandomly:function (world) {
 
 		_.each(world.agents,function(agent) {
 			if (agent!=null) {

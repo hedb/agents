@@ -44,7 +44,7 @@ Grid.prototype = {
 		
 	
 
-function World(canvas,config) {
+function World(config) {
 	
 	defaultConfig = {
 			AGENT_SIZE: 10,
@@ -53,8 +53,13 @@ function World(canvas,config) {
 
 	config = _.extend({},defaultConfig,config);
 
+	// Verifying mandatory inputs.
+	if (_.isUndefined(config["m_CanvasID"])) {
+		throw "m_CanvasID is not provided";
+	}
 
-	this.canvas = canvas;
+	this.canvas = oCanvas.create({ canvas: config["m_CanvasID"], background: "#222" });
+
 	this.agents = {};
 	this.step = function (world,n) {
 		if ( _.isUndefined(world) || _.isNull(world)  ||  _.isUndefined(n) || _.isNull(n)  ) {
@@ -96,7 +101,7 @@ function World(canvas,config) {
 			if (this.getAgent(agent.x,agent.y)==null) {
 				
 				// Generate View
-				agent.view = canvas.display.rectangle({
+				agent.view = this.canvas.display.rectangle({
 					x:0, y:0,
 					width: config.AGENT_SIZE,	height: config.AGENT_SIZE,
 					fill: "#fff"

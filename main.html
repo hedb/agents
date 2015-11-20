@@ -15,6 +15,24 @@
 
 
 
+oCanvas.domReady( function() {
+	var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });
+
+
+	var world = new World(canvas, 
+		{
+			AGENT_SIZE: 1
+		} //
+	);	
+
+
+	world.addAgentsToWorld(Simulation.randStartConf(100,10),canvas);
+
+
+	canvas.setLoop(function() {Simulation.moveRandomly(world)}).start();
+
+}
+);
 
 
 
