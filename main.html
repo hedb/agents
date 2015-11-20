@@ -10,70 +10,50 @@
 
 <script type="text/javascript">
 
-// Add GUI for steps
-// create remove agent
-// complete game of life
+// push all ocanvas into world
 // create choosing behavior between traits like in article
 
-function processInput() {
-	var input = document.getElementById('input').value;
-	document.getElementById('output').value = input;
+
+
+
+
+
+
+var inputs = {
+	1: '\
+var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });	\n\
+var world = new World(canvas, 	\n\
+	{	\n\
+		AGENT_SIZE: 10,	\n\
+		step : Simulation.GameOfLife_Step	\n\
+	}	\n\
+);	\n\
+var conf1 = [\n\
+		new Agent(0,0),\n\
+		new Agent(1,0),\n\
+		new Agent(2,0),\n\
+		new Agent(2,1),\n\
+		new Agent(1,2),\n\
+];\n\
+	world.addAgentsToWorld(conf1,canvas);\n\
+	canvas.settings.fps = 5;\n\
+	canvas.setLoop(function() {\n\
+	world.step(world,1);\n\
+	}).start();\n\
+'
+}
+
+function paste(i) {
+	var input = document.getElementById('input');
+	input.value = inputs[i];
 }
 
 
-oCanvas.domReady( function() {
-	var canvas = oCanvas.create({ canvas: "#myCanvas", background: "#222" });
+function processInput() {
+	var inputTxt = document.getElementById('input').value;
+	eval(inputTxt);
+}
 
-	var world = new World(canvas, 
-		{
-			AGENT_SIZE: 1
-		} //
-	);	
-
-
-	var randStartConf = function(n,squareSize) {
-		var ret = [];
-		for (var i = 0; i < n; i++) {
-			ret.push(new Agent(
-							squareSize-Math.floor(Math.random()*squareSize*2),
-							squareSize-Math.floor(Math.random()*squareSize*2)
-							)
-			);
-		}
-		return ret;
-	}
-
-
-var conf1 = [
-		new Agent(0,0),
-		new Agent(1,0),
-		new Agent(0,1),
-		new Agent(1,1)
-];
-
-	world.addAgentsToWorld(randStartConf(100,10),canvas);
-	//world.addAgentsToWorld(conf1,canvas);
-
-	// Set up a tick function that will move all satellites each frame
-
-	var moveRandomly = function () {
-
-		_.each(world.agents,function(agent) {
-			if (agent!=null) {
-					var xDiff = (Math.random()>.5) ,
-						yDiff = 1- xDiff,
-						sign = (Math.random()>.5) ?1:-1;
-
-					world.moveAgent(xDiff*sign,yDiff*sign,agent);
-				}
-			}
-		)
-	};
-
-	//canvas.setLoop(moveRandomly).start();
-	canvas.setLoop(Simulation.GameOfLife_Step).start();
-
-});
 
 </script>
 </head>
@@ -81,12 +61,20 @@ var conf1 = [
 
 <body>
 
-<textarea id = "input"></textarea>
+
+
+World Input
+<br/>
+<textarea id = "input" cols="100" rows="20"> </textarea>
+<br/>
+
+<a href="javascript:paste(0)" >Random configuration - Moves random</a>
+......
+<a href="javascript:paste(1)" >Game Of Life - Glider</a>
 <br/>
 <input type="button" value="Process Input" onclick="processInput()"></input>
 <br/>
 
-<textarea id = "output"></textarea>
 
 <br/><br/>
 
